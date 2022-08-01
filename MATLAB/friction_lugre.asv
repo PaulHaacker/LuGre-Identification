@@ -29,7 +29,7 @@ F_R_num = F_R(v,z,z_dot);
 figure
 plot(v,F_R_num,'.-')
 hold on
-plot(v,u_control,'.-')
+plot(v,u_control,<'.
 xlabel('velocity v')
 legend('friction F_R','control input u')
 grid on
