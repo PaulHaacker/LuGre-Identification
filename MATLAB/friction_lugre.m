@@ -138,10 +138,10 @@ switch switchVar
         F_BreakAway = 20;
         
         % setpoint scheduling
-        number_setpoints = 10;
+        number_setpoints = 20;
         time_step = 0.5;
         v_min = .01;
-        v_max = .1;
+        v_max = 1;
         des_vel_vec = linspace(v_min,v_max,number_setpoints);
         time_schedule = 0:time_step:time_step*number_setpoints;
         
