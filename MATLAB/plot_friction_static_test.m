@@ -17,6 +17,10 @@ ylim([0 80])
 xlabel('velocity v')
 ylabel('static friction')
 ylim([0 50])
+hold on
 
 %% Plot the data points obtained via control of the simulated system
 
+load('measurements/static_velocity_control_data_noNoise.mat')
+plot(v_points,u_points,'ok')
+legend('analytic curve','simulated points')

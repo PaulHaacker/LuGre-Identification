@@ -42,13 +42,13 @@ movegui('northeast')
 % plot der reibkraft und control input
 u_control = zeros(size(t));
 for k = 1:length(t)
-    u_control(k) = F_control(t(k),x(k,:),parameter);
+    u_control(k) = F_control(t(k),x(k,:));
 end
 
 v = x(:,2);
 z = x(:,3);
-z_dot = v-abs(v)./g_fric(v,parameter).*z;
-F_R_num = F_R(v,z,z_dot,parameter);
+z_dot = v-abs(v)./g_fric(v).*z;
+F_R_num = F_R(v,z,z_dot);
 figure
 plot(v,F_R_num,'.-')
 hold on
