@@ -24,7 +24,7 @@ parameter.model.m = 5;
 
 parameter.controller.mode = 'FB_PI_velocity_control_FF_breakaway_Schedule_setpoint';
 
-[t,x] = friction_lugre_fcn(tspan,x_0,parameter);
+[t,x] = friction_lugre_sim(tspan,x_0,parameter);
 
 %% Plot the results
 

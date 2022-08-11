@@ -1,4 +1,4 @@
-function [t,x] = friction_lugre_fcn(tspan,x_0,parameter)
+function [t,x] = friction_lugre_sim(tspan,x_0,parameter)
 %friction_lugre_fcn - simulate the body with friction
 
 % lugre friction - simple 1D body with friction
