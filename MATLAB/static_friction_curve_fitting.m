@@ -39,9 +39,17 @@ legend('analytic curve','simulated points')
 % use matlab's fcn lsqnonlin and with the curve F_friction_static(v,theta)
 
 % initial values for optimization varies from true value
-theta_0 = theta_true*1.5;
+theta_0 = theta_true*5;
 
-theta_ident = lsqnonlin(
+% reshape data into column vec
+if isrow(v_data)
+    v_data = v_data';
+end
+if isrow(f_data)
+    f_data = f_data';
+end
+
+theta_ident = lsqnonlin(@(theta)diff_fric(theta,v_data,f_data),theta_0);
 
 function diff = diff_fric(theta,v_data,f_data)
 % returns the difference of measured (or true) friction and computed one

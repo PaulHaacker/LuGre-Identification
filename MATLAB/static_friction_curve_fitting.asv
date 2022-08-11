@@ -11,13 +11,13 @@ sigma_2 = 35;
 % theta.sigma_2 = sigma_2;
 
 % lsqnonlin can only handle matrices as parameters
-theta(1) = F_RC;
-theta(2) = F_RS;
-theta(3) = v_s;
-theta(4) = sigma_2;
+theta_true(1) = F_RC;
+theta_true(2) = F_RS;
+theta_true(3) = v_s;
+theta_true(4) = sigma_2;
 
 v_data = 0:.01:1;
-f_data = F_friction_static(v_data,theta);
+f_data = F_friction_static(v_data,theta_true);
 figure
 plot(v_data,f_data,'.-')
 grid on
@@ -38,9 +38,11 @@ legend('analytic curve','simulated points')
 % goal is to find parameters theta as above.
 % use matlab's fcn lsqnonlin and with the curve F_friction_static(v,theta)
 
-theta_0
+% initial values for optimization varies from true value
+theta_0 = theta_true*1.5;
 
-theta_ident = lsqnonlin(
+% reshape v_data into column vec
+theta_ident = lsqnonlin(@(theta)diff_fric(theta,v_data,f_data),theta_0);
 
 function diff = diff_fric(theta,v_data,f_data)
 % returns the difference of measured (or true) friction and computed one
