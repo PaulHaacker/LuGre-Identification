@@ -1,4 +1,5 @@
 %% set parameters and generate data
+%test 
 
 F_RC = 5;
 F_RS = 20;
