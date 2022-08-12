@@ -25,9 +25,6 @@ function [t,x] = friction_lugre_sim(tspan,x_0,parameter)
 opts = odeset('MaxStep',1e-3);
 [t,x] = ode23tb(@(t,x)ode(t,x,parameter),tspan,x_0,opts);
 
-% To-Do: change the fcn to take parameters, e.g. define parameter-struct
-% [t,x] = ode23tb(@(t,x)ode(t,x,parameter),tspan,x_0,opts);
-
 % all plots are now outside the fcn
 
 % plot(t,x(:,2),'.-')

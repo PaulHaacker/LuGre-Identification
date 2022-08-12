@@ -1,4 +1,5 @@
 %% set parameters and generate data
+%test 
 
 F_RC = 5;
 F_RS = 20;
@@ -16,7 +17,7 @@ theta_true(2) = F_RS;
 theta_true(3) = v_s;
 theta_true(4) = sigma_2;
 
-N_data = 50;
+N_data = 5;
 v_data = linspace(0.01,1,N_data);
 f_data = F_friction_static(v_data,theta_true);
 
@@ -39,24 +40,13 @@ f_data_noise = f_data+data_noise(f_data);
 % initial values for optimization varies from true value
 theta_0 = theta_true*5;
 
-% reshape data into column vec
-if isrow(v_data_noise)
-    v_data_noise = v_data_noise';
-end
-if isrow(f_data_noise)
-    f_data_noise = f_data_noise';
-end
-
-% parameter bounds
-theta_lb = zeros(4,1);
-theta_ub = inf*ones(4,1);
-
 % optimization
-[theta_ident,resnorm] = lsqnonlin(@(theta)diff_fric(theta,v_data_noise,...
-    f_data_noise),theta_0, ...
-    theta_lb, theta_ub);
+[theta_ident,resnorm] = StaticFrictionCurveFitting(theta_0,v_data_noise,...
+    f_data_noise);
 
 %% Plot the identified static friction curve and data.
+N_plot = 500;
+v_plot = linspace(0,1,N_plot);
 
 figure
 plot(v_data_noise,f_data_noise,'.')
@@ -66,29 +56,21 @@ xlabel('velocity v')
 ylabel('static friction')
 % ylim([0 50])
 hold on
-plot(v_data,F_friction_static(v_data,theta_ident))
+plot(v_plot,F_friction_static(v_plot,theta_ident))
+plot(v_plot,F_friction_static(v_plot,theta_true))
 annotation('textbox',[.15,.6,.3,.3],'String',['\theta_{true}=(',...
-    num2str(theta_true).])
+    num2str(theta_true),'). \theta_{ident}=(',...
+    num2str(theta_ident),').'])
+legend('data','identified','true')
+title('static friction curve fitting')
 
 %% Functions
-
-function diff = diff_fric(theta,v_data,f_data)
-% returns the difference of measured (or true) friction and computed one
-% via velocities v_data and parameters theta
-% inputs must be:
-% theta - 4x1 matrix
-% v_data - Nx1 matrix
-% f_data - Nx1 matrix
-
-diff = f_data - F_friction_static(v_data,theta);
-
-end
 
 function data_noise = data_noise(data)
 % input is a vector of a signal
 % output is a uniformly distributed noise with amplitude as a percentage of
 % the maximum data entry.
 
-percent = 0.01;
+percent = 0.05;
 data_noise = percent*max(data)*(rand(size(data))-0.5);
 end
