@@ -8,7 +8,7 @@ if isrow(f_data)
     f_data = f_data';
 end
 
-% parameter bounds
+% parameter bounds - nonnegative
 theta_lb = zeros(4,1);
 theta_ub = inf*ones(4,1);
 

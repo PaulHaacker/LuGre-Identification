@@ -44,18 +44,18 @@ function [u_points,v_points] = get_static_data(t,v,u)
                 indx_nr_endConstInterval(k)));
         end
         
-        % plots for sanity check.
-        figure
-        plot(t,v)
-        hold on
-        for k = 1:length(indx_nr_startConstInterval)
-            time_help = t(indx_nr_startConstInterval(k):...
-                indx_nr_endConstInterval(k));
-            plot(time_help, v_points(k)*ones(size(time_help)),'r')
-        end
-        ylabel('velocity')
-        xlabel('time')
-        grid on
+%         % plot for sanity check.
+%         figure
+%         plot(t,v)
+%         hold on
+%         for k = 1:length(indx_nr_startConstInterval)
+%             time_help = t(indx_nr_startConstInterval(k):...
+%                 indx_nr_endConstInterval(k));
+%             plot(time_help, v_points(k)*ones(size(time_help)),'r')
+%         end
+%         ylabel('velocity')
+%         xlabel('time')
+%         grid on
     end
 end
 

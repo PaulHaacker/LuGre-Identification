@@ -6,3 +6,6 @@ load('measurements/measurement_velocity_control_time_noNoise.mat')
 % dimension.
 
 [u_points,v_points] = get_static_data(t,v,u_control);
+
+%% plot processed data
+plot(v_points,u_points,'.-')
