@@ -27,17 +27,11 @@ parameter.model.m = 5;
 
 parameter.controller.mode = 'FB_PI_velocity_control_FF_breakaway_Schedule_setpoint';
 
-[t,x] = friction_lugre_sim(tspan,x_0,parameter);
-
-% reconstruct the input signal
-u_control = zeros(size(t));
-for k = 1:length(t)
-    u_control(k) = F_control(t(k),x(k,:),parameter);
-end
+[t,x,u_control] = friction_lugre_sim(tspan,x_0,parameter);
 
 % add noise to the signal
 % v_noise = x(:,2)+data_noise(x(:,2));
- v_noise = x(:,2); % no noise
+ v_noise = x(:,2); % no noise, since plain noise on velocity signal will break the algorithm
  
 %% Process the data
 

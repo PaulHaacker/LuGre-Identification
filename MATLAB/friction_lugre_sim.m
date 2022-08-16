@@ -1,4 +1,4 @@
-function [t,x] = friction_lugre_sim(tspan,x_0,parameter)
+function [t,x,u_control] = friction_lugre_sim(tspan,x_0,parameter)
 %friction_lugre_fcn - simulate the body with friction
 
 % lugre friction - simple 1D body with friction
@@ -24,6 +24,12 @@ function [t,x] = friction_lugre_sim(tspan,x_0,parameter)
 % x_0 = [0 0 0]';
 opts = odeset('MaxStep',1e-3);
 [t,x] = ode23tb(@(t,x)ode(t,x,parameter),tspan,x_0,opts);
+
+% reconstruct the input signal
+u_control = zeros(size(t));
+for k = 1:length(t)
+    u_control(k) = F_control(t(k),x(k,:),parameter);
+end
 
 % all plots are now outside the fcn
 

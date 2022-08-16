@@ -112,15 +112,19 @@ switch switchVar
         end
         F_an = F_an + F_FF;
     case 'FF_swelling'
+%         % experimentally identified break-away force for FF
+%         F_BreakAway = 20;
+%         
+%         F_FF = 100*t;
+%         if F_FF > F_BreakAway
+%             F_FF = F_BreakAway;
+%         end
+%         
+%         F_an = F_FF + (10-10*cos(t));
         % experimentally identified break-away force for FF
-        F_BreakAway = 20;
-        
-        F_FF = 100*t;
-        if F_FF > F_BreakAway
-            F_FF = F_BreakAway;
-        end
-        
-        F_an = F_FF + (10-10*cos(t));
+
+%         F_an = 20*(1-cos(t));
+        F_an = 40*(sin(t));
     otherwise
         F_an = 0;
         warning('Could not read control input type in fcn F_an')

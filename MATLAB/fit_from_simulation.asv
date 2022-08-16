@@ -1,6 +1,8 @@
-% fit static parameters from dynamic experiment
+% static fitting from simulation
 
-%% run simulation
+
+%% Simulate the system in Matlab
+% test lugre friction - simple 1D body with friction
 close all
 
 x_0 = [0 0 0]';
@@ -23,20 +25,21 @@ parameter.model.fric.para2 = parameters_2;
 parameter.model.fric.para1 = parameters_1;
 parameter.model.m = 5;
 
-parameter.controller.mode = 'FF_swelling';
+parameter.controller.mode = 'FB_PI_velocity_control_FF_breakaway_Schedule_setpoint';
 
 [t,x,u_control] = friction_lugre_sim(tspan,x_0,parameter);
 
-% read velocity
-v = x(:,2);
+% add noise to the signal
+% v_noise = x(:,2)+data_noise(x(:,2));
+ v_noise = x(:,2); % no noise, since plain noise on velocity 
+ 
+%% Process the data
 
-% exactly extract friction force. in the real application, we even need to
-% find friction force by subtracting inertia term from input.
-z = x(:,3);
-z_dot = v-abs(v)./g_fric(v,parameter).*z;
-F_R_num = F_R(v,z,z_dot,parameter);
+[u_points,v_points] = get_static_data(t,v_noise,u_control);
 
-%% identification
+
+%% curve fitting of the static friction
+
 % true parameter
 theta_true = [parameter.model.fric.para2(1:3),parameter.model.fric.para1(3)];
 
@@ -44,27 +47,16 @@ theta_true = [parameter.model.fric.para2(1:3),parameter.model.fric.para1(3)];
 theta_0 = theta_true*5;
 
 % optimization
-[theta_ident,resnorm] = StaticFrictionCurveFitting(theta_0,v,...
-    F_R_num);
+[theta_ident,resnorm] = StaticFrictionCurveFitting(theta_0,v_points,...
+    u_points);
 
-%% plots
-
-figure
-plot(t,x(:,2))
-ylabel('velocity')
-xlabel('time')
-grid on
-
-% figure
-% plot(x(:,2),u_control)
-% ylabel('velocity')
-% xlabel('time')
+%% plots of the result
 
 N_plot = 500;
 v_plot = linspace(0,1,N_plot);
 
 figure
-plot(v,F_R_num,'.','Color',.9*ones(1,3))
+plot(v_points,u_points,'.')
 grid on
 % ylim([0 80])
 xlabel('velocity v')

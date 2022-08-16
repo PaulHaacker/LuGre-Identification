@@ -24,7 +24,7 @@ parameter.model.m = 5;
 
 parameter.controller.mode = 'FB_PI_velocity_control_FF_breakaway_Schedule_setpoint';
 
-[t,x] = friction_lugre_sim(tspan,x_0,parameter);
+[t,x,u_control] = friction_lugre_sim(tspan,x_0,parameter);
 
 %% Plot the results
 
@@ -38,12 +38,6 @@ plot(t,x(:,3),'.-')
 legend('LuGre displacement')
 grid on
 movegui('northeast')
-
-% plot der reibkraft und control input
-u_control = zeros(size(t));
-for k = 1:length(t)
-    u_control(k) = F_control(t(k),x(k,:),parameter);
-end
 
 v = x(:,2);
 z = x(:,3);
