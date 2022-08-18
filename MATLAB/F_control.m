@@ -124,7 +124,15 @@ switch switchVar
         % experimentally identified break-away force for FF
 
 %         F_an = 20*(1-cos(t));
-        F_an = 40*(sin(t));
+
+%         F_an = 40*(sin(t));
+        
+        % step train every second
+        if mod(floor(t),2)
+            F_an = 40;
+        else
+            F_an = -40;
+        end
     otherwise
         F_an = 0;
         warning('Could not read control input type in fcn F_an')

@@ -36,6 +36,10 @@ z = x(:,3);
 z_dot = v-abs(v)./g_fric(v,parameter).*z;
 F_R_num = F_R(v,z,z_dot,parameter);
 
+% % quick and dirty modification: cut off values with larger velocities
+% F_R_num(abs(v)<.25) = [];
+% v(abs(v)<.25) = [];
+
 %% identification
 % true parameter
 theta_true = [parameter.model.fric.para2(1:3),parameter.model.fric.para1(3)];
@@ -48,7 +52,11 @@ theta_0 = theta_true*5;
     F_R_num);
 
 %% plots
+% find cost (residual) of true parameters
+resnorm_ident = sum(diff_fric(theta_ident,v,F_R_num).^2); % should equal to resnorm above
+resnorm_true = sum(diff_fric(theta_true,v,F_R_num).^2);
 
+% plot velocity signal
 figure
 plot(t,x(:,2))
 ylabel('velocity')
@@ -60,6 +68,7 @@ grid on
 % ylabel('velocity')
 % xlabel('time')
 
+% plot static friction curve
 N_plot = 500;
 v_plot = linspace(0,1,N_plot);
 
@@ -78,3 +87,16 @@ annotation('textbox',[.15,.6,.3,.3],'String',['\theta_{true}=(',...
     num2str(theta_ident),').'])
 legend('data','identified','true')
 title('static friction curve fitting')
+
+%% fcns
+function diff = diff_fric(theta,v_data,f_data)
+% returns the difference of measured (or true) friction and computed one
+% via velocities v_data and parameters theta
+% inputs must be:
+% theta - 4x1 matrix
+% v_data - Nx1 matrix
+% f_data - Nx1 matrix
+
+diff = f_data - F_friction_static(v_data,theta);
+
+end
