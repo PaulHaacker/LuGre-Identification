@@ -36,9 +36,13 @@ z = x(:,3);
 z_dot = v-abs(v)./g_fric(v,parameter).*z;
 F_R_num = F_R(v,z,z_dot,parameter);
 
-% % quick and dirty modification: cut off values with larger velocities
-% F_R_num(abs(v)<.25) = [];
-% v(abs(v)<.25) = [];
+% % quick and dirty modification: cut off values with smaller velocities
+% v_cutoff_low = .05; % to try and match static curve better
+% v_cutoff_high = .5; % to eliminate numerical errors in simulated friction
+% F_R_num(abs(v)<v_cutoff_low) = [];
+% v(abs(v)<v_cutoff_low) = [];
+% F_R_num(abs(v)>v_cutoff_high) = [];
+% v(abs(v)>v_cutoff_high) = [];
 
 %% identification
 % true parameter
@@ -70,7 +74,7 @@ grid on
 
 % plot static friction curve
 N_plot = 500;
-v_plot = linspace(0,1,N_plot);
+v_plot = linspace(-1,1,N_plot);
 
 figure
 plot(v,F_R_num,'.','Color',.9*ones(1,3))

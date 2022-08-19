@@ -15,6 +15,7 @@ tau_s = theta(2);
 v_s = theta(3);
 sigma_2 = theta(4);
 
-F_friction_static = sigma_2*v + tau_c + (tau_s - tau_c)*exp(-(v/v_s).^2);
+F_friction_static = sigma_2*v + (tau_c + (tau_s - tau_c)*exp(-(v/v_s).^2))...
+    .*sign(v);
 end
 
