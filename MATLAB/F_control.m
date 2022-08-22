@@ -112,26 +112,48 @@ switch switchVar
         end
         F_an = F_an + F_FF;
     case 'FF_swelling'
-%         % experimentally identified break-away force for FF
-%         F_BreakAway = 20;
-%         
-%         F_FF = 100*t;
-%         if F_FF > F_BreakAway
-%             F_FF = F_BreakAway;
-%         end
-%         
-%         F_an = F_FF + (10-10*cos(t));
+        %         % experimentally identified break-away force for FF
+        %         F_BreakAway = 20;
+        %
+        %         F_FF = 100*t;
+        %         if F_FF > F_BreakAway
+        %             F_FF = F_BreakAway;
+        %         end
+        %
+        %         F_an = F_FF + (10-10*cos(t));
         % experimentally identified break-away force for FF
-
-%         F_an = 20*(1-cos(t));
-
-%         F_an = 40*(sin(t));
+        
+        %         F_an = 20*(1-cos(t));
+        
+        %         F_an = 40*(sin(t));
         
         % step train every second
-        if mod(floor(t),2)
+        if mod(floor(t*.5),2)
             F_an = 40;
         else
             F_an = -40;
+        end
+    case 'FF_presliding'
+        %         % experimentally identified break-away force for FF
+        %         F_BreakAway = 20;
+        %
+        %         F_FF = 100*t;
+        %         if F_FF > F_BreakAway
+        %             F_FF = F_BreakAway;
+        %         end
+        %
+        %         F_an = F_FF + (10-10*cos(t));
+        % experimentally identified break-away force for FF
+        
+        %         F_an = 20*(1-cos(t));
+        
+        %         F_an = 40*(sin(t));
+        
+        % step train every second
+        if mod(floor(t),2)
+            F_an = 5;
+        else
+            F_an = -5;
         end
     otherwise
         F_an = 0;
