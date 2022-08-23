@@ -4,7 +4,8 @@
 close all
 
 x_0 = [0 0 0]';
-tspan = [0 10];
+T_S = .001;
+tspan = 0:T_S:10; 
 
 % control mode, controller gains, control target and system parameter are
 % hard coded within the fcn.
@@ -32,6 +33,23 @@ v = x(:,2);
 q = x(:,1);
 
 %% identification
+% use iv method
+data_presliding = iddata(q,u_control,T_S);
+sys = iv4(data_presliding, [2 1 0]);
+
+b0 = sys.B;
+a0 = sys.A(3);
+a1 = sys.A(2);
+
+% extract known viscous friction - in real world application, this needs to
+% be identified
+tau_v = sigma_2;
+
+% find original parameters
+parameter_ident_iv.J = T_S^2/b0;
+parameter_ident_iv.sigma_1 = parameter_ident_iv.J/T_S*(a1+2)-tau_v;
+parameter_ident_iv.sigma_0 = (parameter_ident_iv.J*(a0-1)+ ...
+    T_S*(parameter_ident_iv.sigma_1+tau_v))/T_S^2;
 
 
 %% plots
@@ -42,13 +60,13 @@ q = x(:,1);
 
 % plot velocity signal
 figure
-plot(t,v)
+plot(t,v,'.-')
 ylabel('velocity')
 xlabel('time')
 grid on
 % plot position signal
 figure
-plot(t,q)
+plot(t,q,'.-')
 ylabel('position')
 xlabel('time')
 grid on
