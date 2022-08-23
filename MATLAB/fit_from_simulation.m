@@ -8,7 +8,7 @@ close all
 x_0 = [0 0 0]';
 tspan = [0 10];
 
-% control mode, controller gains, control target and system parameter are
+% controller gains, control target are
 % hard coded within the fcn.
 F_RC = 5;
 F_RS = 20;
