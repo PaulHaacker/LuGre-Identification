@@ -135,8 +135,8 @@ switch switchVar
         end
     case 'FF_presliding'
         
-        % sinusoidal w/ 3 frequencies
-        F_an = (sin(t)+sin(2*t)+sin(3*t));
+        % sinusoidal w/ 2 frequencies
+        F_an = (sin(t)+
         
         % sine with increasing frequency
 %         F_an = 2*(sin(t.^2));

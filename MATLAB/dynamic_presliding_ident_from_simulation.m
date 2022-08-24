@@ -5,7 +5,7 @@ close all
 
 x_0 = [0 0 0]';
 T_S = .001;
-tspan = 0:T_S:10; 
+tspan = 0:T_S:50; 
 
 % controller gains, control target are
 % hard coded within the fcn.
