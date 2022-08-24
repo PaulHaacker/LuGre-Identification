@@ -32,14 +32,15 @@ parameter.controller.mode = 'FF_presliding';
 v = x(:,2);
 q = x(:,1);
 
-%% identification
-% use iv method
-data_presliding = iddata(q,u_control,T_S);
-sys = iv4(data_presliding, [2 1 0]);
+%% identification, iv method
 
-b0 = sys.B;
-a0 = sys.A(3);
-a1 = sys.A(2);
+iv_opt = iv4Options('Focus','simulation'); % gets an error when included
+data_presliding = iddata(q,u_control,T_S);
+sys_iv = iv4(data_presliding, [2 1 0]);
+
+b0 = sys_iv.B;
+a0 = sys_iv.A(3);
+a1 = sys_iv.A(2);
 
 % extract known viscous friction - in real world application, this needs to
 % be identified
@@ -50,6 +51,26 @@ parameter_ident_iv.J = T_S^2/b0;
 parameter_ident_iv.sigma_1 = parameter_ident_iv.J/T_S*(a1+2)-tau_v;
 parameter_ident_iv.sigma_0 = (parameter_ident_iv.J*(a0-1)+ ...
     T_S*(parameter_ident_iv.sigma_1+tau_v))/T_S^2;
+
+%% identification, arx method
+
+% arx_opt = iv4Options('Focus','simulation');
+data_presliding = iddata(q,u_control,T_S);
+sys_arx = arx(data_presliding, [2 1 0]);
+
+b0 = sys_arx.B;
+a0 = sys_arx.A(3);
+a1 = sys_arx.A(2);
+
+% extract known viscous friction - in real world application, this needs to
+% be identified
+tau_v = sigma_2;
+
+% find original parameters
+parameter_ident_arx.J = T_S^2/b0;
+parameter_ident_arx.sigma_1 = parameter_ident_arx.J/T_S*(a1+2)-tau_v;
+parameter_ident_arx.sigma_0 = (parameter_ident_arx.J*(a0-1)+ ...
+    T_S*(parameter_ident_arx.sigma_1+tau_v))/T_S^2;
 
 
 %% plots
@@ -70,6 +91,28 @@ plot(t,q,'.-')
 ylabel('position')
 xlabel('time')
 grid on
+% annotation('textbox',[.15,.6,.3,.3],'String',['\theta_{true}=(J \sigma_0 \sigma_1)=(',...
+%     num2str([parameter.model.m,parameter.model.fric.para1(1:2)]),...
+%     ').\newline \theta_{ident}=(',...
+%     num2str([parameter_ident_iv.J,parameter_ident_iv.sigma_0,...
+%     parameter_ident_iv.sigma_1]),').'])
+
+disp('______________________________________________________________________')
+disp('Results of iv4')
+disp(['\theta_{true}=(J \sigma_0 \sigma_1)=(',...
+    num2str([parameter.model.m,parameter.model.fric.para1(1:2)]),...
+    ').'])
+disp(['\theta_{ident}=(',...
+    num2str([parameter_ident_iv.J,parameter_ident_iv.sigma_0,...
+    parameter_ident_iv.sigma_1]),').'])
+disp('______________________________________________________________________')
+disp('Results of arx')
+disp(['\theta_{true}=(J \sigma_0 \sigma_1)=(',...
+    num2str([parameter.model.m,parameter.model.fric.para1(1:2)]),...
+    ').'])
+disp(['\theta_{ident}=(',...
+    num2str([parameter_ident_arx.J,parameter_ident_arx.sigma_0,...
+    parameter_ident_arx.sigma_1]),').'])
 
 
 % 
